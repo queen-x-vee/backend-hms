@@ -1,5 +1,6 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from fastapi.exceptions import HTTPException
+from fastapi_jwt_auth import AuthJWT
 from database import engine, Session
 from schemas import SignUpModel, LoginModel
 from models import User
@@ -14,7 +15,7 @@ auth_router = APIRouter(
 session = Session(bind=engine)
 
 @auth_router.post('/signup', status_code=status.HTTP_201_CREATED)
-def signup(user: SignUpModel):
+async def signup(user: SignUpModel):
     #check if email exists
     db_email= session.query(User).filter(User.email == user.email).first()
     db_username = session.query(User).filter(User.username == user.username).first()
@@ -36,6 +37,18 @@ def signup(user: SignUpModel):
     session.add(new_user)
     session.commit()
     return new_user
+
+@auth_router.post('/login', status_code=status.HTTP_200_OK)
+async def login(user: LoginModel, Authorize: AuthJWT = Depends() ):
+    db_user = session.query(User).filter(User.username == user.username).first()
+
+    if db_user and check_password_hash(db_user.password, user.password):
+        access_tokens = Authorize.create_access_token(subject=db_user.username)
+        
+        return {"access_token": access_tokens, "token_type": "bearer"}
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials")
+
 
     
     

@@ -24,8 +24,8 @@ class SignUpModel(BaseModel):
           }
 
 
-#class Settings(BaseModel):
-   #  authjwt_secret_key: str='a0076b92217c27dd15701b85280212aa99fb52c0c48011a42b7f8081eed92a97' #to generate this toke, open terminal and type python, then import secrets, then secrets.token_hex()
+class Settings(BaseModel):
+    authjwt_secret_key: str= '10ee7bf996f2713fc2bf5b62918b4f5b5233abaa7f382807f5c65484b84d1897' #to generate this toke, open terminal and type python, then import secrets, then secrets.token_hex()
 
 
 class LoginModel(BaseModel):
