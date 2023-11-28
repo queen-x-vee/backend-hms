@@ -58,13 +58,13 @@ class MedicineModel(BaseModel):
 
 
 
-class OrderStatusModel(BaseModel):
-     order_status: Optional[str]="PENDING"
+class MedicineQuantityModel(BaseModel):
+     quantity: int
 
      class Config:
           orm_mode = True
           schema_extra = {
                "example": {
-                    "order_status": "PENDING"
+                    "quantity": 4
                }
           }
